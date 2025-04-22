@@ -1,50 +1,66 @@
 import SwiftUI
 
 struct LoginSignupView: View {
+    // MARK: – Constants
+    private let barHeight: CGFloat = 83
+    private let heroAsset  = "snapChatGhost"
+    private let loginColor = Color.pink
+    private let signupColor = Color.blue
+
     var body: some View {
-        GeometryReader { geometry in
+        ZStack(alignment: .bottom) {
+            Color.yellow
+                .ignoresSafeArea()
+
             VStack(spacing: 0) {
-                // Top section - 80% of screen height
-                ZStack {
-                    Color.yellow // Placeholder background color
+                // Hero
+                VStack {
+                    Spacer()
+                    Image(heroAsset)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 140, height: 140)
+                    Spacer()
+                }
+                .frame(maxHeight: .infinity)
 
+                // Action bars
+                ActionBar(title: "LOG IN",
+                          color: loginColor,
+                          height: barHeight,
+                          id: "loginButton") {
+                    // TODO: login action
                 }
-                .frame(height: geometry.size.height * 0.8)
-                
-                // Middle section - 10% of screen height
-                Button(action: { /* login logic here */ }) {
-                    Text("LOG IN")
-                        .font(.custom("CabinetGrotesk-Extrabold", size: 22))
-                        .foregroundColor(Color("WhiteBlackText"))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                ActionBar(title: "SIGN UP",
+                          color: signupColor,
+                          height: barHeight,
+                          id: "signupButton") {
+                    // TODO: signup action
                 }
-                .buttonStyle(RowButtonStyle(normalColor: .red, pressedColor: .red.opacity(0.7)))
-                .frame(height: geometry.size.height * 0.1)
-                
-                // Bottom section - 10% of screen height
-                Button(action: { /* signup logic here */ }) {
-                    Text("SIGN UP")
-                        .font(.custom("CabinetGrotesk-Extrabold", size: 22))
-                        .foregroundColor(Color("WhiteBlackText"))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .buttonStyle(RowButtonStyle(normalColor: .blue, pressedColor: .blue.opacity(0.7)))
-                .frame(height: geometry.size.height * 0.1)
             }
-
+            .ignoresSafeArea(edges: .bottom)   // blue bar hugs bottom curve
         }
-        .ignoresSafeArea() // This ensures the layout fills the full screen
     }
 }
 
-struct RowButtonStyle: ButtonStyle {
-    var normalColor: Color
-    var pressedColor: Color
+private struct ActionBar: View {
+    let title: String
+    let color: Color
+    let height: CGFloat
+    let id: String
+    let action: () -> Void
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .background(configuration.isPressed ? pressedColor : normalColor)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.custom("CabinetGrotesk-Bold", size: 24))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: height)
+                .background(color)
+        }
+        .accessibilityIdentifier(id)
     }
 }
 
