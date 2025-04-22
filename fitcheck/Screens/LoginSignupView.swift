@@ -61,6 +61,7 @@ private struct ActionBar: View {
                 .background(color)
         }
         .accessibilityIdentifier(id)
+        .buttonStyle(PressableButtonStyle())
     }
 }
 

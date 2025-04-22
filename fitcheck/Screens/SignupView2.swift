@@ -1,7 +1,7 @@
 import SwiftUI
 import PhoneNumberKit
 
-struct LoginView2: View {
+struct SignupView2: View {
     // MARK: – Constants
     private let horizontalPadding: CGFloat = 20
     private let fieldWidth: CGFloat = 340
@@ -11,7 +11,9 @@ struct LoginView2: View {
 
     // MARK: – State
     @State private var phoneNumber = ""
+    @State private var phoneNumber2 = ""
     @FocusState private var phoneFieldFocused: Bool
+    @FocusState private var phoneFieldFocused2: Bool
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -20,7 +22,7 @@ struct LoginView2: View {
             VStack(spacing: 0) {
                 // MARK: Title + Back
                 ZStack {
-                    Text("Log in")
+                    Text("Create account")
                         .font(.custom("CabinetGrotesk-Bold", size: 34))
                         .foregroundColor(.black)
 
@@ -41,7 +43,7 @@ struct LoginView2: View {
 
                 // MARK: Phone field
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Verification Code")
+                    Text("First name")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.black)
 
@@ -49,7 +51,7 @@ struct LoginView2: View {
                         
                         TextField("", text: $phoneNumber)
                             .font(.title2)
-                            .keyboardType(.phonePad)
+                            .keyboardType(.default)
                             .textContentType(.telephoneNumber)
                             .focused($phoneFieldFocused)
                             .autocorrectionDisabled()
@@ -69,18 +71,57 @@ struct LoginView2: View {
                 }
                 .frame(maxWidth: .infinity)
 
+                Spacer().frame(height: 36)
+
+                // MARK: Second Verification Code field
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Last name")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.black)
+
+                    HStack(spacing: 8) {
+                        TextField("", text: $phoneNumber2)
+                            .font(.title2)
+                            .keyboardType(.default)
+                            .textContentType(.telephoneNumber)
+                            .focused($phoneFieldFocused2)
+                            .autocorrectionDisabled()
+                    }
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 14)
+                    .frame(maxWidth: fieldWidth)
+                    .background(
+                        RoundedRectangle(cornerRadius: barCorner, style: .continuous)
+                            .stroke(phoneFieldFocused2 ? .black : Color(white: 0.85), lineWidth: 1.5)
+                            .background(
+                                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
+                                    .fill(Color(white: 0.98))
+                            )
+                    )
+                    .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
+                }
+                .frame(maxWidth: .infinity)
+
+                Spacer().frame(height: 36)
+                Text("By tapping \"Agree and Continue\" below, you agree to the Terms of Service and acknowledge that you have read the Privacy Policy.")
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundColor(.black)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: fieldWidth, alignment: .leading)
+                Spacer().frame(height: 24)
+
                 // MARK: Continue button
-                Button("Verify") {
+                Button("Agree and Continue") {
                     
                     // login action
                 }
                 .font(.custom("CabinetGrotesk-Bold", size: 22))
-                .foregroundColor(.white)
+                .foregroundColor(phoneNumber.isEmpty ? .white : .white)
                 .frame(maxWidth: fieldWidth, minHeight: barHeight)
-                .background(Color.black)
+                .background(phoneNumber.isEmpty ? Color.gray : Color.black)
                 .cornerRadius(barCorner)
                 .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
-                .padding(.top, 24)
+                .padding(.top, 0)
                 .accessibilityIdentifier("loginButton")
                 .buttonStyle(PressableButtonStyle())
 
@@ -92,4 +133,4 @@ struct LoginView2: View {
     }
 }
 
-#Preview { LoginView2() }
+#Preview { SignupView2() }

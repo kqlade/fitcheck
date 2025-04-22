@@ -81,6 +81,7 @@ struct LoginView1: View {
 
                 // MARK: Continue button
                 Button("Continue") {
+                    
                     // login action
                 }
                 .font(.custom("CabinetGrotesk-Bold", size: 22))
@@ -91,6 +92,7 @@ struct LoginView1: View {
                 .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
                 .padding(.top, 24)
                 .accessibilityIdentifier("loginButton")
+                .buttonStyle(PressableButtonStyle())
 
                 Spacer(minLength: 0)
             }
