@@ -39,8 +39,6 @@ struct CoreView: View {
             ThemeView()
         case .city:
             CityView()
-        case .runway:
-            RunwayView()
         }
     }
 }

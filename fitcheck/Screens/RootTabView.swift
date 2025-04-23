@@ -3,30 +3,30 @@ import SwiftUI
 /// The one and only root shown from `FitCheckApp`
 struct RootTabView: View {
     
-    enum Tab { case home, friends, capture, inbox, profile }
-    @State private var tab: Tab = .home
+    enum Tab { case runway, crew, capture, chat, profile }
+    @State private var tab: Tab = .runway
     
     var body: some View {
         TabView(selection: $tab) {
-            // ─────────── HOME / FEED ──────────────────────────────
+            // ─────────── RUNWAY / FEED ──────────────────────────────
             CoreView()
-                .tabItem { Label("Home", systemImage: "house") }
-                .tag(Tab.home)
+                .tabItem { Label("Runway", systemImage: "house") }
+                .tag(Tab.runway)
             
-            // ─────────── FRIENDS (stub) ──────────────────────────
-            Color.black.opacity(0.001)
-                .tabItem { Label("Friends", systemImage: "person.2") }
-                .tag(Tab.friends)
+            // ─────────── CREW (friends-only feed) ──────────────────────────
+            CrewView()
+                .tabItem { Label("Crew", systemImage: "person.2") }
+                .tag(Tab.crew)
             
             // ─────────── CAPTURE “+” (stub) ──────────────────────
             Color.black.opacity(0.001)
                 .tabItem { Label("Capture", systemImage: "plus") }
                 .tag(Tab.capture)
             
-            // ─────────── INBOX (stub) ────────────────────────────
+            // ─────────── CHAT (stub) ────────────────────────────
             Color.black.opacity(0.001)
-                .tabItem { Label("Inbox", systemImage: "bubble.right") }
-                .tag(Tab.inbox)
+                .tabItem { Label("Chat", systemImage: "bubble.right") }
+                .tag(Tab.chat)
             
             // ─────────── PROFILE (stub) ──────────────────────────
             Color.black.opacity(0.001)

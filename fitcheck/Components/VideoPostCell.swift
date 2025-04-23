@@ -8,17 +8,27 @@ struct VideoPostCell: View {
     @State private var paused  = false
     
     var body: some View {
-        LoopingPlayer(player: vm.player)
-            .onAppear   { vm.load(url: post.url) }
-            .onDisappear{ vm.cleanup() }              // free AVAssets
-            .onChange(of: post.url) { vm.load(url: post.url) }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                paused.toggle()
-                paused ? vm.pause() : vm.play()
-            }
-            .ignoresSafeArea(.container, edges: [.top, .horizontal])
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        if post.url.absoluteString == "blue" {
+            Color.blue
+                .ignoresSafeArea(.container, edges: [.top, .horizontal])
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if post.url.absoluteString == "red" {
+            Color.red
+                .ignoresSafeArea(.container, edges: [.top, .horizontal])
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            LoopingPlayer(player: vm.player)
+                .onAppear   { vm.load(url: post.url) }
+                .onDisappear{ vm.cleanup() }              // free AVAssets
+                .onChange(of: post.url) { vm.load(url: post.url) }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    paused.toggle()
+                    paused ? vm.pause() : vm.play()
+                }
+                .ignoresSafeArea(.container, edges: [.top, .horizontal])
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
 }
 

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CategoryHeaderBar: View {
     // MARK: – Constants
-    private let categories = ["Theme", "City", "Runway"]
+    private let categories = ["Theme", "City"]
     private let repetitions = 10            // endless-scroll illusion
     private let barHeight: CGFloat = 44
     private let fadeWidth: CGFloat = 20
@@ -21,10 +21,7 @@ struct CategoryHeaderBar: View {
             let barWidth = geo.size.width * 0.75   // adapts to size change
             
             ZStack {
-                // ── Background strip ───────────────────────────────
-                Color.black.opacity(0.4)
-                    .frame(width: barWidth, height: barHeight)
-                    .clipShape(Capsule())
+                // ── Background strip REMOVED for full transparency ──
 
                 // ── Scrollable pills ───────────────────────────────
                 ScrollView(.horizontal, showsIndicators: false) {

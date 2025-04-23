@@ -4,7 +4,6 @@ import SwiftUI
 enum FeedCategory: String, CaseIterable, Identifiable {
     case theme = "Theme"
     case city = "City" 
-    case runway = "Runway"
     
     var id: String { rawValue }
     
