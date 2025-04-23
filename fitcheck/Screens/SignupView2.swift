@@ -59,6 +59,9 @@ struct SignupView2: View {
                 .foregroundColor(.black)
 
             HStack(spacing: 8) {
+                Text("@")
+                    .font(.title2)
+                    .foregroundColor(.gray)
                 TextField("", text: $firstName)
                     .font(.title2)
                     .keyboardType(.default)
@@ -146,9 +149,16 @@ private struct TopBar: View {
     let horizontalPadding: CGFloat
     var body: some View {
         ZStack {
-            Text("Create account")
-                .font(.custom("CabinetGrotesk-Bold", size: 34))
-                .foregroundColor(.black)
+            // Wrap title and subtitle in a VStack for vertical arrangement
+            VStack(spacing: 2) { // Add small spacing between title and subtitle
+                Text("Create account")
+                    .font(.custom("CabinetGrotesk-Bold", size: 34))
+                    .foregroundColor(.black)
+
+                Text("Step 1 of 3")
+                    .font(.system(size: 15, weight: .regular)) // Regular weight, smaller size
+                    .foregroundColor(.gray) // Gray color
+            }
 
             HStack {
                 Button(action: { /* navigate back */ }) {

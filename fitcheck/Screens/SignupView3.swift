@@ -96,8 +96,16 @@ private struct TopBar: View {
     let horizontalPadding: CGFloat
     var body: some View {
         ZStack {
-            Text("Create account") // Keep specific title
-                .font(.custom("CabinetGrotesk-Bold", size: 34))
+            // Wrap title and subtitle in a VStack
+            VStack(spacing: 2) {
+                Text("Create account")
+                    .font(.custom("CabinetGrotesk-Bold", size: 34))
+                    .foregroundColor(.black)
+
+                Text("Step 2 of 3") // Add subtitle
+                    .font(.system(size: 15, weight: .regular))
+                    .foregroundColor(.gray)
+            }
 
             HStack {
                 Button { /* back */ } label: {

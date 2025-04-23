@@ -107,8 +107,8 @@ struct SignupView4: View {
     }
 
     private var continueButton: some View { // Extracted Button
-        Button("Continue") {
-            // login action
+        Button("Sign up") { // Changed text from "Continue"
+            // signup action - should finalize account creation
         }
         .font(.custom("CabinetGrotesk-Bold", size: 22))
         .foregroundColor(.white)
@@ -126,9 +126,16 @@ private struct TopBar: View {
     let horizontalPadding: CGFloat
     var body: some View {
         ZStack {
-            Text("Create account")
-                .font(.custom("CabinetGrotesk-Bold", size: 34))
-                .foregroundColor(.black)
+            // Wrap title and subtitle in a VStack
+            VStack(spacing: 2) {
+                Text("Create account")
+                    .font(.custom("CabinetGrotesk-Bold", size: 34))
+                    .foregroundColor(.black)
+
+                Text("Step 3 of 3") // Add subtitle
+                    .font(.system(size: 15, weight: .regular))
+                    .foregroundColor(.gray)
+            }
 
             HStack {
                 Button(action: { /* navigate back */ }) {
