@@ -78,11 +78,12 @@ struct LoginView2: View {
         .font(.custom("CabinetGrotesk-Bold", size: 22))
         .foregroundColor(.white)
         .frame(maxWidth: fieldWidth, minHeight: barHeight)
-        .background(Color.black)
+        .background(isVerifyButtonEnabled ? Color.black : Color.gray)
         .cornerRadius(barCorner)
         .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
         .accessibilityIdentifier("loginButton")
         .buttonStyle(PressableButtonStyle())
+        .disabled(!isVerifyButtonEnabled)
     }
 
     private var resendCodeButton: some View {
@@ -91,6 +92,11 @@ struct LoginView2: View {
         }
         .font(.system(size: 15, weight: .semibold))
         .foregroundColor(.black)
+    }
+
+    // Computed property to check if the button should be enabled
+    private var isVerifyButtonEnabled: Bool {
+        !verificationCode.isEmpty
     }
 }
 

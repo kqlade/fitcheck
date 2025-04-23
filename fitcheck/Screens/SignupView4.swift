@@ -113,11 +113,17 @@ struct SignupView4: View {
         .font(.custom("CabinetGrotesk-Bold", size: 22))
         .foregroundColor(.white)
         .frame(maxWidth: fieldWidth, minHeight: barHeight)
-        .background(Color.black)
+        .background(isSignUpButtonEnabled ? Color.black : Color.gray)
         .cornerRadius(barCorner)
         .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
         .accessibilityIdentifier("loginButton")
         .buttonStyle(PressableButtonStyle())
+        .disabled(!isSignUpButtonEnabled) // Add disabled modifier
+    }
+
+    // Computed property to check if the button should be enabled
+    private var isSignUpButtonEnabled: Bool {
+        birthDate != nil // Enable only if birthDate is selected
     }
 }
 

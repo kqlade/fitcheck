@@ -76,10 +76,11 @@ struct SignupView3: View {
             .font(.custom("CabinetGrotesk-Bold", size: 22))
             .foregroundColor(.white)
             .frame(maxWidth: fieldWidth, minHeight: barHeight) // Use renamed constant
-            .background(Color.black)
+            .background(isContinueButtonEnabled ? Color.black : Color.gray)
             .cornerRadius(barCorner) // Use renamed constant
             .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
             .buttonStyle(PressableButtonStyle())
+            .disabled(!isContinueButtonEnabled)
             .accessibilityIdentifier("verifyButton")
     }
 
@@ -88,6 +89,10 @@ struct SignupView3: View {
             .font(.system(size: 15, weight: .semibold))
             .foregroundColor(.black)
             .accessibilityIdentifier("resendCodeButton")
+    }
+
+    private var isContinueButtonEnabled: Bool {
+        !verificationCode.isEmpty
     }
 }
 

@@ -88,11 +88,17 @@ struct LoginView1: View {
         .font(.custom("CabinetGrotesk-Bold", size: 22))
         .foregroundColor(.white)
         .frame(maxWidth: fieldWidth, minHeight: barHeight)
-        .background(Color.black)
+        .background(isContinueButtonEnabled ? Color.black : Color.gray)
         .cornerRadius(barCorner)
         .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
         .accessibilityIdentifier("loginButton")
         .buttonStyle(PressableButtonStyle())
+        .disabled(!isContinueButtonEnabled)
+    }
+
+    // Computed property to check if the button should be enabled
+    private var isContinueButtonEnabled: Bool {
+        !phoneNumber.isEmpty
     }
 }
 
