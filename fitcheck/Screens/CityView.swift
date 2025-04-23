@@ -1,38 +1,30 @@
 import SwiftUI
-import AVKit
 
-struct FeedView: View {
-    // MARK: – Demo content
+struct CityView: View {
+    // MARK: - Properties
     private let posts: [Post] = [
-        .demo       // helper from Post.extension we added earlier
+        .demo  // Using the same demo data structure for now
     ]
     
-    @State private var page        = 0
-    @State private var selectedTab = "For You"
+    @State private var page = 0
     
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                // ① Black fallback (video usually covers everything)
+                // Background
                 Color.black
                     .ignoresSafeArea(.container, edges: [.top, .horizontal])
                 
-                // ② Vertical-swipe pager
+                // City-specific video pager (could filter for city-related content)
                 VideoPager(page: $page, posts: posts)
                 
-                // ③ Overlays (no header here)
+                // Overlays specific to City view
                 if let current = posts[safe: page] {
                     SideActionBar(post: current)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.trailing, 12)
                         .padding(.bottom, 120)
-                    
-
                 }
-            }
-            .overlay(alignment: .top) {
-                CategoryHeaderBar(selected: $selectedTab)
-                    .padding(.top, geo.safeAreaInsets.top + 12)
             }
             .overlay(alignment: .bottomLeading) {
                 if let current = posts[safe: page] {
@@ -46,8 +38,6 @@ struct FeedView: View {
     }
 }
 
-/* ───────────── helpers ───────────── */
-
 private extension Collection {
     /// Safe index access: `array[safe: 10]`
     subscript(safe index: Index) -> Element? {
@@ -55,4 +45,4 @@ private extension Collection {
     }
 }
 
-#Preview { FeedView() }
+#Preview { CityView() }

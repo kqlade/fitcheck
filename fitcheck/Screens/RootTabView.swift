@@ -9,7 +9,7 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $tab) {
             // ─────────── HOME / FEED ──────────────────────────────
-            FeedView()
+            CoreView()
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(Tab.home)
             
