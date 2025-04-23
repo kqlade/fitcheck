@@ -11,7 +11,7 @@ import SwiftUI
 struct fitcheckApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            LoginView1()
         }
     }
 }
