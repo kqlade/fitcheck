@@ -8,128 +8,161 @@ struct SignupView2: View {
     private let barCorner: CGFloat = 14
     private let barHeight: CGFloat = 56
 
+    // MARK: – Phone utilities (Copied from LoginView1)
+    private let phoneUtil = PhoneNumberUtility()
+    private var regionID: String {
+        if #available(iOS 16, *) { Locale.current.region?.identifier ?? "US" }
+        else { Locale.current.regionCode ?? "US" }
+    }
+    private var dialPrefix: String { "+\(phoneUtil.countryCode(for: regionID) ?? 1)" }
 
     // MARK: – State
+    @State private var firstName = ""
     @State private var phoneNumber = ""
-    @State private var phoneNumber2 = ""
-    @FocusState private var phoneFieldFocused: Bool
-    @FocusState private var phoneFieldFocused2: Bool
+    @FocusState private var firstNameFocused: Bool
+    @FocusState private var phoneNumberFocused: Bool
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color(.systemBackground).ignoresSafeArea()
-
+        GeometryReader { geo in
             VStack(spacing: 0) {
-                // MARK: Title + Back
-                ZStack {
-                    Text("Create account")
-                        .font(.custom("CabinetGrotesk-Bold", size: 34))
-                        .foregroundColor(.black)
+                TopBar(horizontalPadding: horizontalPadding)
 
-                    HStack {
-                        Button(action: { /* navigate back */ }) {
-                            Image(systemName: "chevron.backward")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundColor(.black)
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 36) {
+                        usernameField
+
+                        phoneNumberField
+
+                        VStack(spacing: 24) {
+                            helperText
+                            continueButton
                         }
-                        .accessibilityIdentifier("backButton")
-                        Spacer()
+                        .padding(.top, 0)
                     }
+                    .padding(.top, 48)
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.bottom, geo.safeAreaInsets.bottom)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(.top, 32)
-                .padding(.horizontal, horizontalPadding)
+                .scrollDismissesKeyboard(.interactively)
+                .ignoresSafeArea(.keyboard)
+            }
+            .background(Color(.systemBackground).ignoresSafeArea())
+        }
+        .onAppear { firstNameFocused = true }
+    }
 
-                Spacer().frame(height: 48)
+    private var usernameField: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Username")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.black)
 
-                // MARK: Phone field
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("First name")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.black)
-
-                    HStack(spacing: 8) {
-                        
-                        TextField("", text: $phoneNumber)
-                            .font(.title2)
-                            .keyboardType(.default)
-                            .textContentType(.telephoneNumber)
-                            .focused($phoneFieldFocused)
-                            .autocorrectionDisabled()
-                    }
-                    .padding(.vertical, 14)
-                    .padding(.horizontal, 14)
-                    .frame(maxWidth: fieldWidth)
+            HStack(spacing: 8) {
+                TextField("", text: $firstName)
+                    .font(.title2)
+                    .keyboardType(.default)
+                    .focused($firstNameFocused)
+                    .autocorrectionDisabled()
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .frame(maxWidth: fieldWidth)
+            .background(
+                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
+                    .stroke(firstNameFocused ? .black : Color(white: 0.85), lineWidth: 1.5)
                     .background(
                         RoundedRectangle(cornerRadius: barCorner, style: .continuous)
-                            .stroke(phoneFieldFocused ? .black : Color(white: 0.85), lineWidth: 1.5)
-                            .background(
-                                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
-                                    .fill(Color(white: 0.98))
-                            )
+                            .fill(Color(white: 0.98))
                     )
-                    .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
-                }
-                .frame(maxWidth: .infinity)
+            )
+            .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
+        }
+        .frame(maxWidth: .infinity)
+    }
 
-                Spacer().frame(height: 36)
+    private var phoneNumberField: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Phone number")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.black)
 
-                // MARK: Second Verification Code field
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Last name")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.black)
-
-                    HStack(spacing: 8) {
-                        TextField("", text: $phoneNumber2)
-                            .font(.title2)
-                            .keyboardType(.default)
-                            .textContentType(.telephoneNumber)
-                            .focused($phoneFieldFocused2)
-                            .autocorrectionDisabled()
-                    }
-                    .padding(.vertical, 14)
-                    .padding(.horizontal, 14)
-                    .frame(maxWidth: fieldWidth)
+            HStack(spacing: 8) {
+                Text(dialPrefix)
+                    .font(.title2)
+                    .foregroundColor(.gray)
+                TextField("", text: $phoneNumber)
+                    .font(.title2)
+                    .keyboardType(.phonePad)
+                    .textContentType(.telephoneNumber)
+                    .focused($phoneNumberFocused)
+                    .autocorrectionDisabled()
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .frame(maxWidth: fieldWidth)
+            .background(
+                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
+                    .stroke(phoneNumberFocused ? .black : Color(white: 0.85), lineWidth: 1.5)
                     .background(
                         RoundedRectangle(cornerRadius: barCorner, style: .continuous)
-                            .stroke(phoneFieldFocused2 ? .black : Color(white: 0.85), lineWidth: 1.5)
-                            .background(
-                                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
-                                    .fill(Color(white: 0.98))
-                            )
+                            .fill(Color(white: 0.98))
                     )
-                    .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
+            )
+            .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private var helperText: some View {
+        Text("By tapping \"Agree and Continue\" below, you agree to the Terms of Service and acknowledge that you have read the Privacy Policy.")
+            .font(.system(size: 13, weight: .regular))
+            .foregroundColor(.black)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: fieldWidth, alignment: .leading)
+    }
+
+    private var continueButton: some View {
+        Button("Agree and Continue") {
+            // login action
+        }
+        .font(.custom("CabinetGrotesk-Bold", size: 22))
+        .foregroundColor(.white)
+        .frame(maxWidth: fieldWidth, minHeight: barHeight)
+        .background(isContinueButtonEnabled ? Color.black : Color.gray)
+        .cornerRadius(barCorner)
+        .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
+        .accessibilityIdentifier("loginButton")
+        .buttonStyle(PressableButtonStyle())
+        .disabled(!isContinueButtonEnabled)
+    }
+
+    private var isContinueButtonEnabled: Bool {
+        !firstName.isEmpty && !phoneNumber.isEmpty
+    }
+}
+
+private struct TopBar: View {
+    let horizontalPadding: CGFloat
+    var body: some View {
+        ZStack {
+            Text("Create account")
+                .font(.custom("CabinetGrotesk-Bold", size: 34))
+                .foregroundColor(.black)
+
+            HStack {
+                Button(action: { /* navigate back */ }) {
+                    Image(systemName: "chevron.backward")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.black)
                 }
-                .frame(maxWidth: .infinity)
-
-                Spacer().frame(height: 36)
-                Text("By tapping \"Agree and Continue\" below, you agree to the Terms of Service and acknowledge that you have read the Privacy Policy.")
-                    .font(.system(size: 13, weight: .regular))
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: fieldWidth, alignment: .leading)
-                Spacer().frame(height: 24)
-
-                // MARK: Continue button
-                Button("Agree and Continue") {
-                    
-                    // login action
-                }
-                .font(.custom("CabinetGrotesk-Bold", size: 22))
-                .foregroundColor(phoneNumber.isEmpty ? .white : .white)
-                .frame(maxWidth: fieldWidth, minHeight: barHeight)
-                .background(phoneNumber.isEmpty ? Color.gray : Color.black)
-                .cornerRadius(barCorner)
-                .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
-                .padding(.top, 0)
-                .accessibilityIdentifier("loginButton")
-                .buttonStyle(PressableButtonStyle())
-
-                Spacer(minLength: 0)
+                .accessibilityIdentifier("backButton")
+                Spacer()
             }
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-        .onAppear { phoneFieldFocused = true }
+        .padding(.top, 32)
+        .padding(.horizontal, horizontalPadding)
+        .frame(maxWidth: .infinity)
     }
 }
 

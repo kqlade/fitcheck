@@ -8,87 +8,114 @@ struct LoginView2: View {
     private let barCorner: CGFloat = 14
     private let barHeight: CGFloat = 56
 
-
     // MARK: – State
-    @State private var phoneNumber = ""
-    @FocusState private var phoneFieldFocused: Bool
+    @State private var verificationCode = ""
+    @FocusState private var codeFieldFocused: Bool
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color(.systemBackground).ignoresSafeArea()
-
+        GeometryReader { geo in
             VStack(spacing: 0) {
-                // MARK: Title + Back
-                ZStack {
-                    Text("Log in")
-                        .font(.custom("CabinetGrotesk-Bold", size: 34))
-                        .foregroundColor(.black)
+                TopBar(horizontalPadding: horizontalPadding)
 
-                    HStack {
-                        Button(action: { /* navigate back */ }) {
-                            Image(systemName: "chevron.backward")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundColor(.black)
-                        }
-                        .accessibilityIdentifier("backButton")
-                        Spacer()
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 24) {
+                        verificationCodeField
+
+                        verifyButton
+
+                        resendCodeButton
+
+                        Spacer(minLength: 0)
                     }
+                    .padding(.top, 48)
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.bottom, geo.safeAreaInsets.bottom)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(.top, 32)
-                .padding(.horizontal, horizontalPadding)
+                .scrollDismissesKeyboard(.interactively)
+                .ignoresSafeArea(.keyboard)
+            }
+            .background(Color(.systemBackground).ignoresSafeArea())
+        }
+        .onAppear { codeFieldFocused = true }
+    }
 
-                Spacer().frame(height: 48)
+    // MARK: - Subviews
+    private var verificationCodeField: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Verification Code")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.black)
 
-                // MARK: Phone field
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Verification Code")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.black)
-
-                    HStack(spacing: 8) {
-                        
-                        TextField("", text: $phoneNumber)
-                            .font(.title2)
-                            .keyboardType(.phonePad)
-                            .textContentType(.telephoneNumber)
-                            .focused($phoneFieldFocused)
-                            .autocorrectionDisabled()
-                    }
-                    .padding(.vertical, 14)
-                    .padding(.horizontal, 14)
-                    .frame(maxWidth: fieldWidth)
+            HStack(spacing: 8) {
+                TextField("", text: $verificationCode)
+                    .font(.title2)
+                    .keyboardType(.numberPad)
+                    .textContentType(.oneTimeCode)
+                    .focused($codeFieldFocused)
+                    .autocorrectionDisabled()
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .frame(maxWidth: fieldWidth)
+            .background(
+                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
+                    .stroke(codeFieldFocused ? .black : Color(white: 0.85), lineWidth: 1.5)
                     .background(
                         RoundedRectangle(cornerRadius: barCorner, style: .continuous)
-                            .stroke(phoneFieldFocused ? .black : Color(white: 0.85), lineWidth: 1.5)
-                            .background(
-                                RoundedRectangle(cornerRadius: barCorner, style: .continuous)
-                                    .fill(Color(white: 0.98))
-                            )
+                            .fill(Color(white: 0.98))
                     )
-                    .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
-                }
-                .frame(maxWidth: .infinity)
+            )
+            .shadow(color: .black.opacity(0.03), radius: 8, y: 2)
+        }
+        .frame(maxWidth: .infinity)
+    }
 
-                // MARK: Continue button
-                Button("Verify") {
-                    
-                    // login action
-                }
-                .font(.custom("CabinetGrotesk-Bold", size: 22))
-                .foregroundColor(.white)
-                .frame(maxWidth: fieldWidth, minHeight: barHeight)
-                .background(Color.black)
-                .cornerRadius(barCorner)
-                .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
-                .padding(.top, 24)
-                .accessibilityIdentifier("loginButton")
-                .buttonStyle(PressableButtonStyle())
+    private var verifyButton: some View {
+        Button("Verify") {
+            // login action
+        }
+        .font(.custom("CabinetGrotesk-Bold", size: 22))
+        .foregroundColor(.white)
+        .frame(maxWidth: fieldWidth, minHeight: barHeight)
+        .background(Color.black)
+        .cornerRadius(barCorner)
+        .shadow(color: .black.opacity(0.09), radius: 8, y: 3)
+        .accessibilityIdentifier("loginButton")
+        .buttonStyle(PressableButtonStyle())
+    }
 
-                Spacer(minLength: 0)
+    private var resendCodeButton: some View {
+        Button("Resend code") {
+            // Resend code action
+        }
+        .font(.system(size: 15, weight: .semibold))
+        .foregroundColor(.black)
+    }
+}
+
+// MARK: - TopBar
+private struct TopBar: View {
+    let horizontalPadding: CGFloat
+    var body: some View {
+        ZStack {
+            Text("Log in")
+                .font(.custom("CabinetGrotesk-Bold", size: 34))
+                .foregroundColor(.black)
+
+            HStack {
+                Button(action: { /* navigate back */ }) {
+                    Image(systemName: "chevron.backward")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.black)
+                }
+                .accessibilityIdentifier("backButton")
+                Spacer()
             }
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-        .onAppear { phoneFieldFocused = true }
+        .padding(.top, 32)
+        .padding(.horizontal, horizontalPadding)
+        .frame(maxWidth: .infinity)
     }
 }
 
