@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		80D856A52DB8340000C26955 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 80D856A42DB8340000C26955 /* PhoneNumberKit */; };
+		80D857612DB9A35600C26955 /* FontAwesome in Frameworks */ = {isa = PBXBuildFile; productRef = 80D857602DB9A35600C26955 /* FontAwesome */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				80D856A52DB8340000C26955 /* PhoneNumberKit in Frameworks */,
+				80D857612DB9A35600C26955 /* FontAwesome in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +133,7 @@
 			name = fitcheck;
 			packageProductDependencies = (
 				80D856A42DB8340000C26955 /* PhoneNumberKit */,
+				80D857602DB9A35600C26955 /* FontAwesome */,
 			);
 			productName = fitcheck;
 			productReference = 80D856402DB8164400C26955 /* fitcheck.app */;
@@ -216,6 +219,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				80D856A32DB8340000C26955 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
+				80D8575F2DB9A35600C26955 /* XCRemoteSwiftPackageReference "FontAwesome" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 80D856412DB8164400C26955 /* Products */;
@@ -422,6 +426,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = fitcheck/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "FitCheck needs camera access to let you record fits.\nFitCheck needs camera access to let you record outfit videos.\n";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitCheck can save your fits to your library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "FitCheck lets you pick existing fits from your library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -452,6 +459,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = fitcheck/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "FitCheck needs camera access to let you record fits.\nFitCheck needs camera access to let you record outfit videos.\n";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FitCheck can save your fits to your library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "FitCheck lets you pick existing fits from your library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -592,6 +602,14 @@
 				minimumVersion = 4.0.2;
 			};
 		};
+		80D8575F2DB9A35600C26955 /* XCRemoteSwiftPackageReference "FontAwesome" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/thii/FontAwesome.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -599,6 +617,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 80D856A32DB8340000C26955 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
+		};
+		80D857602DB9A35600C26955 /* FontAwesome */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80D8575F2DB9A35600C26955 /* XCRemoteSwiftPackageReference "FontAwesome" */;
+			productName = FontAwesome;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

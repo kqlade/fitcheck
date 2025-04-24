@@ -56,8 +56,7 @@ struct SignupView1: View {
                             .frame(width: 0.5)
 
                         alertButton("OK", id: "acceptNotif", ring: true) {
-                            UNUserNotificationCenter.current()
-                                .requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
+                            requestNotificationPermission()
                         }
                     }
                     .fixedSize(horizontal: false, vertical: true)
@@ -79,6 +78,22 @@ struct SignupView1: View {
         }
     }
 
+    // MARK: - Request Notification Permission
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            DispatchQueue.main.async {
+                if granted {
+                    // Permission granted, continue to next step
+                    print("Notification permission granted")
+                    // Navigate to next screen here if needed
+                } else {
+                    // Handle rejection
+                    print("Notification permission denied: \(error?.localizedDescription ?? "User denied")")
+                }
+            }
+        }
+    }
+    
     // MARK: – Helper: one button
     @ViewBuilder
     private func alertButton(

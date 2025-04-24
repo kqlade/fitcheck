@@ -1,7 +1,7 @@
 import SwiftUI
 import AVKit
 
-struct RunwayView: View {
+struct ClosetView: View {
     // MARK: - State
     @State private var selectedCategory: FeedCategory = .theme
     @State private var selectedCategoryText: String = FeedCategory.theme.rawValue
@@ -17,28 +17,25 @@ struct RunwayView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                // Background
-                Color.black
+                Color.white
                     .ignoresSafeArea(.container, edges: [.top, .horizontal])
                 
-                // Bracket deck voting UI for Runway tab
-                BracketDeckView(posts: posts) {
-                    // Called once deck is done – for now just show a toast or reload deck
+                // 3-column vertical grid of videos with minimal spacing
+                ScrollView(showsIndicators: false) {
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 1), count: 3), spacing: 1) {
+                        ForEach(posts.indices, id: \ .self) { i in
+                            VideoPostCell(post: posts[i])
+                                .aspectRatio(9/16, contentMode: .fill)
+                                .clipped()
+                        }
+                    }
+                    .padding(0)
                 }
             }
-            // .overlay(alignment: .bottomLeading) {
-            //     if let current = posts[safe: page] {
-            //         CaptionBar(post: current)
-            //             .padding(.leading, 16)
-            //             .padding(.bottom, 72)
-            //     }
-            // }
             .overlay(alignment: .top) {
-                // Category header bar that stays consistent across all views
                 CategoryHeaderBar(selected: $selectedCategoryText)
                     .padding(.top, geo.safeAreaInsets.top + 12)
                     .onChange(of: selectedCategoryText) { oldValue, newValue in
-                        // Update the enum value when text changes
                         if let newCategory = FeedCategory.allCases.first(where: { $0.rawValue == newValue }) {
                             selectedCategory = newCategory
                         }
@@ -50,10 +47,9 @@ struct RunwayView: View {
 }
 
 private extension Collection {
-    /// Safe index access: `array[safe: 10]`
     subscript(safe index: Index) -> Element? {
         indices.contains(index) ? self[index] : nil
     }
 }
 
-#Preview { RunwayView() }
+#Preview { ClosetView() }

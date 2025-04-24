@@ -1,10 +1,11 @@
 import SwiftUI
 import AVKit
 
-struct RunwayView: View {
+struct RankingView: View {
     // MARK: - State
     @State private var selectedCategory: FeedCategory = .theme
     @State private var selectedCategoryText: String = FeedCategory.theme.rawValue
+    @State private var currentPage: Int = 0
     
     // MARK: - Properties
     private let posts: [Post] = [
@@ -21,10 +22,16 @@ struct RunwayView: View {
                 Color.black
                     .ignoresSafeArea(.container, edges: [.top, .horizontal])
                 
-                // Bracket deck voting UI for Runway tab
-                BracketDeckView(posts: posts) {
-                    // Called once deck is done – for now just show a toast or reload deck
+                // TikTok-style full-screen video pager (standard vertical scrolling)
+                ZStack(alignment: .trailing) {
+                    RankPager(page: $currentPage, posts: posts)
+                    
+                    // Action buttons with counters on the right side
+                    if let currentPost = posts[safe: currentPage] {
+                        RankActionBar(post: currentPost)
+                    }
                 }
+
             }
             // .overlay(alignment: .bottomLeading) {
             //     if let current = posts[safe: page] {
@@ -56,4 +63,4 @@ private extension Collection {
     }
 }
 
-#Preview { RunwayView() }
+#Preview { RankingView() }

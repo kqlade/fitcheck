@@ -3,38 +3,47 @@ import SwiftUI
 /// The one and only root shown from `FitCheckApp`
 struct RootTabView: View {
     
-    enum Tab { case runway, crew, capture, chat, profile }
+    enum Tab { case runway, crew, capture, rank, profile }
     @State private var tab: Tab = .runway
+    @State private var previousTab: Tab = .runway
+    
+    // Track tab changes to remember previous tab
+    private var tabBinding: Binding<Tab> {
+        Binding(
+            get: { tab },
+            set: { newTab in
+                // Store previous tab when switching to camera
+                if newTab == .capture {
+                    previousTab = tab
+                }
+                tab = newTab
+            }
+        )
+    }
     
     var body: some View {
-        TabView(selection: $tab) {
-            // ─────────── RUNWAY / FEED ──────────────────────────────
-            CoreView()
-                .tabItem { Label("Runway", systemImage: "house") }
-                .tag(Tab.runway)
-            
-            // ─────────── CREW (friends-only feed) ──────────────────────────
-            CrewView()
-                .tabItem { Label("Crew", systemImage: "person.2") }
-                .tag(Tab.crew)
-            
-            // ─────────── CAPTURE “+” (stub) ──────────────────────
-            Color.black.opacity(0.001)
-                .tabItem { Label("Capture", systemImage: "plus") }
-                .tag(Tab.capture)
-            
-            // ─────────── CHAT (stub) ────────────────────────────
-            Color.black.opacity(0.001)
-                .tabItem { Label("Chat", systemImage: "bubble.right") }
-                .tag(Tab.chat)
-            
-            // ─────────── PROFILE (stub) ──────────────────────────
-            Color.black.opacity(0.001)
-                .tabItem { Label("Profile", systemImage: "person.crop.circle") }
-                .tag(Tab.profile)
+        ZStack(alignment: .bottom) {
+            Group {
+                switch tab {
+                case .runway:
+                    RunwayView()
+                case .crew:
+                    CrewView()
+                case .capture:
+                    CameraView(onBack: { tab = previousTab })
+                case .rank:
+                    RankingView()
+                case .profile:
+                    ClosetView()
+                }
+            }
+            .ignoresSafeArea(.container, edges: [.horizontal, .bottom])
+
+            if tab != .capture {
+                CustomTabBar(selection: tabBinding)
+            }
         }
-        .onAppear(perform: configureTabBar)   // ← single, one-time hook
-        .preferredColorScheme(.dark)          // light status-bar text
+        .preferredColorScheme(.dark)
     }
     
     // MARK: – Private
@@ -45,17 +54,22 @@ struct RootTabView: View {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .black
         
-        // Selected ≙ pure white
+        // Create font descriptor for Cabinet Grotesk Medium
+        let cabinetGroteskMedium = UIFont(name: "CabinetGrotesk-Medium", size: 10)!
+        
+        // Selected ≙ pure white with custom font
         appearance.stackedLayoutAppearance.selected.iconColor = .white
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor.white
+            .foregroundColor: UIColor.white,
+            .font: cabinetGroteskMedium
         ]
         
-        // Un-selected ≙ 55 % white (matches header bar dimming)
+        // Un-selected ≙ 55 % white (matches header bar dimming) with custom font
         let dim = UIColor.white.withAlphaComponent(0.55)
         appearance.stackedLayoutAppearance.normal.iconColor  = dim
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: dim
+            .foregroundColor: dim,
+            .font: cabinetGroteskMedium
         ]
         
         UITabBar.appearance().standardAppearance     = appearance

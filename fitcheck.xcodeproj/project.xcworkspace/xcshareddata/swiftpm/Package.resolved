@@ -1,6 +1,15 @@
 {
-  "originHash" : "d01b822f6446cef501cebe37b5b78101e0a82173bb523ee64501d3331d40b50c",
+  "originHash" : "b1af4edfc4126faad893b1d9cf7e7e81a917f5df6617abdc185dc2107440b636",
   "pins" : [
+    {
+      "identity" : "fontawesome.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/thii/FontAwesome.swift",
+      "state" : {
+        "revision" : "07883a32d49dfc7bdedbeea115067b53dfbeeb43",
+        "version" : "1.9.1"
+      }
+    },
     {
       "identity" : "phonenumberkit",
       "kind" : "remoteSourceControl",

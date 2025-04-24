@@ -87,8 +87,15 @@ private struct TapPairView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            tappableHalf(post: left,  side: .left)
-            tappableHalf(post: right, side: .right)
+            ZStack(alignment: .leading) {
+                tappableHalf(post: left, side: .left)
+                SideActionBar(post: left, side: .left)
+            }
+            
+            ZStack(alignment: .trailing) {
+                tappableHalf(post: right, side: .right)
+                SideActionBar(post: right, side: .right)
+            }
         }
         .ignoresSafeArea(.container, edges: [.top, .horizontal])
     }

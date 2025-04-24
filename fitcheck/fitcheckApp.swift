@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FontAwesome
 
 @main
 struct fitcheckApp: App {

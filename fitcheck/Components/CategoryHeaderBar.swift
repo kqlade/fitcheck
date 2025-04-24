@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CategoryHeaderBar: View {
     // MARK: – Constants
-    private let categories = ["Theme", "City"]
+    private let categories = ["Theme"]
     private let repetitions = 10            // endless-scroll illusion
     private let barHeight: CGFloat = 44
     private let fadeWidth: CGFloat = 20
@@ -20,11 +20,14 @@ struct CategoryHeaderBar: View {
         GeometryReader { geo in
             let barWidth = geo.size.width * 0.75   // adapts to size change
             
-            ZStack {
-                // ── Background strip REMOVED for full transparency ──
+            // Center the bar by using HStack with spacers
+            HStack {
+                Spacer()
+                ZStack {
+                    // ── Background strip REMOVED for full transparency ──
 
-                // ── Scrollable pills ───────────────────────────────
-                ScrollView(.horizontal, showsIndicators: false) {
+                    // ── Scrollable pills ───────────────────────────────
+                    ScrollView(.horizontal, showsIndicators: false) {
                     ScrollViewReader { proxy in
                         HStack(spacing: 28) {
                             ForEach(Array(repeated.enumerated()), id: \.offset) { idx, cat in
@@ -51,8 +54,10 @@ struct CategoryHeaderBar: View {
                 .frame(width: barWidth, height: barHeight)
                 .mask(edgeFade(width: barWidth))
                 
+                }
+                .frame(width: barWidth, height: barHeight)
+                Spacer()
             }
-            .frame(width: barWidth, height: barHeight)
         }
         .frame(height: barHeight)
     }

@@ -1,87 +1,80 @@
 import SwiftUI
 
+enum ClipSide { case left, right }     // tiny helper enum
+
 struct SideActionBar: View {
-    private enum C {               // constants
-        static let avatar:  CGFloat = 42
+    private enum C {
         static let icon:    CGFloat = 28
         static let spacing: CGFloat = 22
+        static let edgeInset: CGFloat = 16
     }
 
-    let post: Post
-    @State private var isFollowing = false
+    let post:  Post
+    let side:  ClipSide                // ← new
 
     var body: some View {
         VStack(spacing: C.spacing) {
-
-            Circle()
-                .fill(Color.white)
-                .frame(width: C.avatar, height: C.avatar)
-                .overlay(Circle().stroke(Color.white, lineWidth: 1))
-                .padding(.bottom, 8)
-
-            Button {
-                isFollowing.toggle()
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            } label: {
-                Image(systemName: isFollowing ? "checkmark" : "plus")
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(.pink)
-                    .padding(10)
-                    .background(Circle().fill(Color.white))
-            }
-            .offset(y: -20)
-            .accessibilityLabel(isFollowing ? "Following" : "Follow")
-
-            actionButton("heart.fill",             post.likes,    label: "Like")
-            actionButton("bubble.right.fill",      post.comments, label: "Comment")
-            actionButton("arrowshape.turn.up.right.fill", post.shares, label: "Share")
-
-            Button { /* bookmark */ } label: {
-                Image(systemName: "bookmark.fill")
-                    .font(.system(size: C.icon))
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(.white)
-            .accessibilityLabel("Save")
+            saveButton
+            shareButton
         }
-        .padding(.trailing, 8)
+        .frame(maxHeight: .infinity, alignment: .center)
+        .padding(edgeInset)            // hug chosen edge
+    }
+
+    // MARK: – Buttons
+    private var saveButton: some View {
+        Button { toggleSave(post) } label: {
+            Image(systemName: "bookmark.fill")
+                .resizable().aspectRatio(contentMode: .fit)
+                .frame(width: C.icon, height: C.icon)
+                .foregroundColor(.white)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(post.isSaved ? "Saved" : "Save")
+    }
+
+    private var shareButton: some View {
+        Button { share(post) } label: {
+            Image(systemName: "arrowshape.turn.up.right.fill")
+                .resizable().aspectRatio(contentMode: .fit)
+                .frame(width: C.icon, height: C.icon)
+                .foregroundColor(.white)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Share")
     }
 
     // MARK: – Helpers
-    @ViewBuilder
-    private func actionButton(_ sf: String, _ count: Int64, label: String) -> some View {
-        Button {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        } label: {
-            VStack(spacing: 4) {
-                Image(systemName: sf)
-                    .font(.system(size: C.icon))
-                Text(format(count))
-                    .font(.system(size: 13, weight: .semibold))
-            }
-            .foregroundColor(.white)
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(label)
+    private func toggleSave(_ post: Post) {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        // BookmarkManager.shared.toggle(post)
     }
 
-    private func format(_ n: Int64) -> String {
-        switch n {
-        case 1_000_000...: return String(format: "%.1fM", Double(n) / 1_000_000)
-        case 10_000...:    return String(format: "%.1fK", Double(n) / 1_000)
-        default:           return "\(n)"
+    private func share(_ post: Post) {
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        let url = URL(string: "https://fitcheck.app/theme/\(post.id)")!
+        let avc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        scene.windows.first?.rootViewController?.present(avc, animated: true)
+    }
+
+    // Edge-specific padding helper
+    private var edgeInset: EdgeInsets {
+        switch side {
+        case .left:
+            return EdgeInsets(top: 0, leading: C.edgeInset, bottom: 0, trailing: 0)
+        case .right:
+            return EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: C.edgeInset)
         }
     }
 }
 
+/* ---------- preview ---------- */
 #Preview {
-    ZStack { Color.black.ignoresSafeArea()
-        SideActionBar(
-            post: Post.demo.with(
-                likes: 135_000,
-                comments: 4_411,
-                shares: 1_246
-            )
-        )
+    GeometryReader { geo in
+        ZStack {
+            Color.blue
+            SideActionBar(post: Post.demo, side: .left)
+        }
+        .frame(width: geo.size.width / 2)   // mimic half-screen
     }
 }
